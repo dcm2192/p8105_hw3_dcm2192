@@ -5,4 +5,11 @@ date: "2024-10-14"
 output: github_document
 ---
 
+```{r setup, message = FALSE}
+library(tidyverse)
+library(ggridges)
+library(patchwork)
+```
+
+This code contains my answers to P8105 HW 3. 
 
