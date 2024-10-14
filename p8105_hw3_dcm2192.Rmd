@@ -16,10 +16,31 @@ This code contains my answers to P8105 HW 3.
 
 ## Problem 1
 
-Load NY NOAA dataset.
+*Load NY NOAA dataset.*
 ```{r}
 data("ny_noaa")
 ```
 
 The `ny_noaa` dataset is comprised of `r nrow(ny_noaa)` observations of `r ncol(ny_noaa)` variables. Its variables include `id`, which is the weather station ID; `date`, which is the date of observation; `prcp`, the amount of precipitation measured in mm; `snow`, the amount of snowfall measured in mm; `snwd`, the snow depth measured in mm; `tmax` and `tmin`, the maximum and minimum temperatures in degrees Celsius. A significant portion of the `ny_noaa` dataset contains missing data (values of 0 or `NA`) for its measurements of precipitation, snowfall and depth, and temperature. 
+
+*Clean NY NOAA dataset.*
+
+Create separate columns for year, month, day. Adjust variables to appropriate data types. 
+```{r}
+ny_noaa <- 
+  ny_noaa |>  
+  separate(date, into = c("year", "month", "day"), convert = TRUE) |> 
+  mutate(
+    tmax = as.numeric(tmax),
+    tmin = as.numeric(tmin))
+```
+
+Find most commmon values for snowfall.
+```{r}
+ny_noaa |> 
+  count(snow) |> 
+  arrange(desc(n))
+```
+
+The most commonly observed values for snowfall are 0, followed by `NA`. This is because many of these observations are missing data for snowfall, either because none was recorded on that day or because the data was otherwise missing (possibly due to failure to take measurements). Following these, the next most common values are 25mm, 13mm, and 51mm. 
 
