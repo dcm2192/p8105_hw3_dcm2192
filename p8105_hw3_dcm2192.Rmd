@@ -7,6 +7,7 @@ output: github_document
 
 ```{r setup, message = FALSE}
 library(tidyverse)
+library(tidyr)
 library(ggridges)
 library(patchwork)
 library(p8105.datasets)
@@ -85,5 +86,30 @@ covar <- read_csv("./data/nhanes_covar.csv")
 accel <- read_csv("./data/nhanes_accel.csv")
 ```
 
+Load, tidy, merge, and otherwise organize the data sets. Your final dataset should include all originally observed variables; exclude participants less than 21 years of age, and those with missing demographic data; and encode data with reasonable variable classes (i.e. not numeric, and using factors with the ordering of tables and plots in mind).
+```{r}
+covar <- 
+  covar |> 
+  janitor::clean_names() |> 
+  rename(
+    SEQN = x1, 
+    sex = x1_male, 
+    age = x3, 
+    BMI = x4, 
+    education = x1_less_than_high_school
+  )
+```
 
+```{r}
+covar <- 
+  covar |> 
+  filter(!is.na(SEQN), 
+         !(SEQN == "SEQN")) |> 
+  mutate(sex = recode(sex, `1` = "male", `2` = "female"),
+         education = recode(education, 
+                            `1` = "Less than high school", 
+                            `2` = "High school equivalent", 
+                            `3` = "More than high school"))
+  
+```
 
