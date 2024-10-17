@@ -1,7 +1,7 @@
 ---
 title: "p8105_hw3_dcm2192"
 author: "Dylan Morgan"
-date: "2024-10-14"
+date: "2024-10-16"
 output: github_document
 ---
 
@@ -58,14 +58,14 @@ ny_noaa |>
 
 The average maximum temperatures were consistently lower in January over the years than in July. Each station appears to follow a consistent pattern in maximum temperature recordings for a given month and year such that they all generally matched one another in magnitude of temperature. One outlier exists in July of approximately 1988 in which the temperature recorded at one station was significantly lower than the other stations at that time. In January of approximately 1983, there was a notably lower temperature recording at one station compared to other stations at that time. 
 
-(i) tmax vs. tmin for full dataset
+(i) tmax vs. tmin for full dataset.
 ```{r}
 temp_hex_plot <- ny_noaa |> 
   ggplot(aes(x = tmin, y = tmax)) + 
   geom_hex()
 ```
 
-(ii) plot showing distribution of snowfall values >0 and <100 separately by year
+(ii) plot showing distribution of snowfall values >0 and <100 separately by year.
 ```{r}
 snowfall_ridge_plot <- ny_noaa |>  
   filter(snow < 100, snow > 0) |> 
@@ -73,20 +73,20 @@ snowfall_ridge_plot <- ny_noaa |>
   geom_density_ridges()
 ```
 
-Create two panel plot with temp_hex_plot and snowfall_ridge_plot
+Create two panel plot with temp_hex_plot and snowfall_ridge_plot.
 ```{r}
 temp_hex_plot + snowfall_ridge_plot
 ```
 
 ## Problem 2
 
-Load demographic and accelerometer data
+Load demographic and accelerometer data.
 ```{r}
 covar <- read_csv("./data/nhanes_covar.csv")
 accel <- read_csv("./data/nhanes_accel.csv")
 ```
 
-Load, tidy, merge, and otherwise organize the data sets. Your final dataset should include all originally observed variables; exclude participants less than 21 years of age, and those with missing demographic data; and encode data with reasonable variable classes (i.e. not numeric, and using factors with the ordering of tables and plots in mind).
+Load, tidy, merge, and otherwise organize the data sets.
 ```{r}
 covar <- 
   covar |> 
@@ -103,13 +103,21 @@ covar <-
 ```{r}
 covar <- 
   covar |> 
-  filter(!is.na(SEQN), 
-         !(SEQN == "SEQN")) |> 
+  drop_na() |> 
+  filter(!(SEQN == "SEQN")) |> 
   mutate(sex = recode(sex, `1` = "male", `2` = "female"),
          education = recode(education, 
                             `1` = "Less than high school", 
                             `2` = "High school equivalent", 
-                            `3` = "More than high school"))
-  
+                            `3` = "More than high school"), 
+         age = as.numeric(age), 
+         BMI = as.numeric(BMI)) |> 
+  filter(age >= 21)
+
+accel <- 
+  accel |> 
+  mutate(SEQN = as.character(SEQN))
+
+covar_accel <- inner_join(covar, accel, by = "SEQN")
 ```
 
