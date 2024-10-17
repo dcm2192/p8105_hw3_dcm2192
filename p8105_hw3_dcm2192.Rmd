@@ -149,7 +149,7 @@ covar_accel |>
 
 Based on these plots, in general and regardless of age, females with a high school equivalent or higher education level consistently have higher overall total activity than males of the same age. Males older than age 40 with less than a high school education generally have higher overall total activity than females of the same age; for participants younger than 40 and with the same education level, females have higher total activity than males. 
 
-Accelerometer data allows the inspection activity over the course of the day. Make a three-panel plot that shows the 24-hour activity time courses for each education level and use color to indicate sex. Describe in words any patterns or conclusions you can make based on this graph; including smooth trends may help identify differences.
+24-hr plots for accelerometer. 
 ```{r}
 covar_accel_pvlong <- 
   pivot_longer(covar_accel, 
@@ -166,6 +166,28 @@ covar_accel_pvlong |>
 ```
 
 Based on these plots, both males and females with an education level of more than high school showed the highest minutes of activity compared to equivalent or below high school level, and it also showed the notable outliers among both males and females. Among all education levels and regardless of sex, there is a sharp decline in activity values toward the middle of the day, which could be an indication of when the participant is resting and/or sleeping. 
+
+## Problem 3
+
+Load and clean citibike data.
+```{r}
+citibike_jan2020 <- read_csv("./data/citibike/Jan 2020 Citi.csv") |> 
+  mutate(month = "January", year = "2020")
+
+citibike_july2020 <- read_csv("./data/citibike/July 2020 Citi.csv") |> 
+  mutate(month = "July", year = "2020")
+
+citibike_jan2024 <- read_csv("./data/citibike/Jan 2024 Citi.csv") |> 
+  mutate(month = "January", year = "2024")
+
+citibike_july2024 <- read_csv("./data/citibike/July 2024 Citi.csv") |> 
+  mutate(month = "July", year = "2024")
+
+citibike_total <- 
+  rbind(citibike_jan2020, citibike_july2020, citibike_jan2024, citibike_july2024)
+```
+
+The combined dataset `citibike_total`, which contains all four datasets from January 2020 to July 2024, is comprised of `r nrow(citibike_total)` observations of `r ncol(citibike_total)` variables. Its variables include `ride_id`, the type of bike as `rideable_type`, the day of the week as `weekdays`, the ride time as `duration`, the names of the start and end stations as `start_station_name` and `end_station_name`, the designation of either a member or casual rider as `member_casual`, and the `month` and `year` in which the data was collected.
 
 
 
