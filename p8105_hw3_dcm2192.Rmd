@@ -1,7 +1,7 @@
 ---
 title: "p8105_hw3_dcm2192"
 author: "Dylan Morgan"
-date: "2024-10-16"
+date: "2024-10-14"
 output: github_document
 ---
 
@@ -120,4 +120,21 @@ accel <-
 
 covar_accel <- inner_join(covar, accel, by = "SEQN")
 ```
+
+Education densities for age and sex. 
+```{r}
+covar_accel |> 
+  janitor::tabyl(education, sex)
+
+covar_accel |> 
+  ggplot(aes(x = age, 
+             y = education, 
+             fill = sex)) + 
+  geom_density_ridges(alpha = 0.5, 
+                      scale = 0.85)
+```
+
+There were more younger females than younger males who pursued education that was more than high school. More older females than older males had a high school equivalent level of education. There were more younger males than younger females who had a high school equivalent education level. 
+
+
 
